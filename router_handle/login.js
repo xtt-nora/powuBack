@@ -49,27 +49,19 @@ exports.login = (req, res) => {
     // 第一步 查看数据表中有没有前端传过来的账号
     const sql = 'select * from users where username = ?'
     db.query(sql, loginfo.username, (err, results) => {
-        // 执行sql语句失败的情况 一般在数据库断开的情况会执行失败
         if (err) return res.cc(err)
         if (results.length !== 1) return res.cc('登录失败')
-        // 第二步 对前端传过来的密码进行解密
         const compareResult = bcrypt.compareSync(loginfo.password, results[0].password)
         if (!compareResult) {
             return res.cc('登录失败')
         }
-        // 第三步 对账号是否冻结做判定
-        if (results[0].status == 1) {
-            return res.cc('账号被冻结')
-        }
-        // 第四步 生成返回给前端的token
-        // 剔除加密后的密码,头像,创建时间,更新时间
+        
         const user = {
             ...results[0],
             password: '',
             create_time: '',
             update_time: '',
         }
-        // 设置token的有效时长 有效期为7个小时
         const tokenStr = jwt.sign(user, jwtconfig.jwtSecretKey, {
             expiresIn: '7h'
         })
