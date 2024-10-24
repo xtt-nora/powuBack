@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken')
 const jwtconfig = require('../jwt_config/index.js')
 
 exports.register = (req, res) => {
-	console.log('注册')
     const reginfo = req.body
     if (!reginfo.username || !reginfo.password) {
         return res.send({
