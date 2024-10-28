@@ -66,10 +66,13 @@ exports.login = (req, res) => {
             expiresIn: '7h'
         })
         res.send({
-            results: results[0],
+			data:{
+				results: results[0],
+				token: 'Bearer ' + tokenStr
+			},
             status: 0,
-            message: '登录成功',
-            token: 'Bearer ' + tokenStr,
+            msg: '登录成功',
+            
         })
     })
 }
